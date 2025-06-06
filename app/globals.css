@@ -1,8 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-lightGray: #F9FAFB;
+  --color-primary-textColor: #111827;
+  --color-secondary-textColor: #6B7280;
+}
+
 
 @layer base {
-  html, body {
+  body {
     direction: rtl;
   }
+  
+  body {
+    @apply bg-lightGray text-primary-textColor
+  }
+
 }
