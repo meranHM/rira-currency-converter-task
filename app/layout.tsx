@@ -1,6 +1,14 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import { Roboto } from "next/font/google"
 import localFont from "next/font/local"
+
+const robotoFont = Roboto({
+  subsets: ["latin"],
+  style: "normal",
+  display: "swap",
+  variable: "--font-roboto",
+})
 
 const vazirFont = localFont({
   src: [
@@ -26,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html dir="rtl" lang="fa-IR">
-      <body className={`${vazirFont.variable} font-[--font-vazirmatn]`}>
+      <body className={`${vazirFont.variable} ${robotoFont.variable} antialiased`}>
         {children}
       </body>
     </html>
