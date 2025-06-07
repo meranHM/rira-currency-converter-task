@@ -1,5 +1,5 @@
 import ExchangeForm from "@/components/ExchangeForm"
-import OutputBox from "@/components/OutputBox"
+
 
 export default function Home() {
   return (
@@ -11,9 +11,7 @@ export default function Home() {
       >
         تبدیل واحد پول
       </h1>
-
       <ExchangeForm />
-      <OutputBox />
     </main>
   )
 }
