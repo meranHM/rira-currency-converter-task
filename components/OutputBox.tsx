@@ -1,22 +1,32 @@
 import Image from "next/image"
+import usaFlag from "@/public/icons/usa-flag.svg"
+import irFlag from "@/public/icons/iran-flag.svg"
 
-export default function OutputBox(){
+type OutputBoxProps = {
+  exchangeType: string
+  total: number | null
+  loading: boolean
+}
+
+export default function OutputBox({ exchangeType, total, loading }: OutputBoxProps){
   return (
     <div
         className="mt-8 w-full max-w-md border border-gray-200 rounded-xl shadow-md shadow-gray-200 min-h-16 flex justify-center items-center"
     >
+      {loading ? <p>در حال محاسبه...</p> : (
         <p
             className="w-full text-center text-xl font-roboto"
         >
-            0.00024 USD&nbsp;
+            {total}&nbsp;
             <Image 
-              src="/icons/usa-flag.svg"
-              alt="USA flag"
+              src={exchangeType === "USDtoIRR" ? irFlag : usaFlag}
+              alt={exchangeType === "USDtoIRR" ? "Iran's flag" : "USA's Flag"}
               width={32}
               height={32}
               className="inline-block"
             />
         </p>
+      )}
     </div>
   )
 }
