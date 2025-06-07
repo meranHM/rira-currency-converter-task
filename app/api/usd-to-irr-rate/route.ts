@@ -3,10 +3,10 @@ import { NextResponse } from "next/server"
 
 export async function GET() {
     const apiKey = process.env.EXCHANGERATE_API_KEY
-    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/pair/IRR/USD`
+    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/pair/USD/IRR`
 
     try {
-        const response = await fetch(url, { next: { revalidate: 86400 } }) //Caching the result to avoid reaching the maximum request limit of free plan
+        const response = await fetch(url)
 
         if (!response.ok) {
             return new NextResponse("Error fetching exchange rate", { status: response.status })
