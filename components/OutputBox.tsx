@@ -19,10 +19,10 @@ export default function OutputBox({ exchangeType, total, loading }: OutputBoxPro
         <p
             className="w-full text-center text-xl font-roboto"
         >
-            {total}&nbsp; {exchangeType === "USDtoIRR" ? "IRT" : "USD"}&nbsp;
+            {total}&nbsp; {exchangeType === "USDtoIRT" ? "IRT" : "USD"}&nbsp;
             <Image 
-              src={exchangeType === "USDtoIRR" ? irFlag : usaFlag}
-              alt={exchangeType === "USDtoIRR" ? "Iran's flag" : "USA's Flag"}
+              src={exchangeType === "USDtoIRT" ? irFlag : usaFlag}
+              alt={exchangeType === "USDtoIRT" ? "Iran's flag" : "USA's Flag"}
               width={32}
               height={32}
               className="inline-block"
