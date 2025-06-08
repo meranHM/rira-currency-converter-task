@@ -1,14 +1,14 @@
 "use client"
 
-import { ArrowDown } from "lucide-react"
+
 import Image from "next/image"
 import usaFlag from "@/public/icons/usa-flag.svg"
 import irFlag from "@/public/icons/iran-flag.svg"
 import { useState, ChangeEvent, FormEvent } from "react"
+import ExchangeRateBox from "./ExchangeRateBox"
 import OutputBox from "./OutputBox"
 
 type ExchangeType = "USDtoIRR" | "IRRtoUSD"
-
 
 export default function ExchangeForm() {
     const [amount, setAmount] = useState("")
@@ -30,27 +30,41 @@ export default function ExchangeForm() {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setAmount(e.target.value)
     }
+
+    // Fetching the data from API route
+    const fetchCurrencyData = async () => {
+        const res = await fetch("/api/brs-api")
+        if (!res.ok) throw new Error("Failed to fetch currency data.")
+        
+        return res.json()
+    }
     
+    // Handling form submission
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (amount === "") return
         setLoading(true)
+        const numericAmount = parseFloat(amount)
 
         try {
-            const res = await fetch(`/api/${exchangeType === "USDtoIRR"
-                ? "usd-to-irr-rate"
-                : "irr-to-usd-rate"
-            }`)
-            if (!res.ok) throw new Error ("Failed to fetch exchange rate.")
+            const data = await fetchCurrencyData()
+            
+            const usdToIrrPrice = data.currency[1].price
+            const IrrToUsdPrice = 1 / usdToIrrPrice
 
-            const data = await res.json()
-            const rate = data.conversion_rate
-            const total = rate * Number(amount)
+            const totalUsdToIrr = numericAmount * usdToIrrPrice
+            const totalIrrToUSd = numericAmount * IrrToUsdPrice
 
-            setExchangeRate(rate)
-            setConvertedAmount(total)
+            if (exchangeType === "USDtoIRR") {
+                setExchangeRate(usdToIrrPrice)
+                setConvertedAmount(totalUsdToIrr)
+            } else {
+                setExchangeRate(IrrToUsdPrice)
+                setConvertedAmount(totalIrrToUSd)
+            }
+
         } catch (error) {
             console.error(error)
-            setConvertedAmount(null)
         } finally {
             setLoading(false)
         }
@@ -58,52 +72,52 @@ export default function ExchangeForm() {
     
   return (
     <div
-        className="w-full max-w-md mt-8 space-y-12"
+        className="w-full max-w-md p-2 mt-8 space-y-8"
     >
         <form
-            className="p-2 flex flex-col items-center space-y-12"
+            className="p-2 flex flex-col items-center space-y-8"
             onSubmit={handleSubmit}
         >
             <fieldset
-                className="flex gap-4"
+                className="flex gap-3"
             >
-                <label htmlFor="usd-to-irr" className="text-nowrap">
-                    <input 
-                        type="radio" 
-                        id="usd-to-irr" 
-                        name="exchange-type" 
-                        value="USDtoIRR"
-                        checked={exchangeType === "USDtoIRR"}
-                        onChange={handleExchangeTypeChange}
-                        className="ml-2"
-                    />
-                    دلار آمریکا به ریال ایران
+                <input 
+                    type="radio" 
+                    id="usd-to-irr" 
+                    name="exchange-type" 
+                    value="USDtoIRR"
+                    checked={exchangeType === "USDtoIRR"}
+                    onChange={handleExchangeTypeChange}
+                    
+                />
+                <label htmlFor="usd-to-irr" className="text-nowrap ml-2">
+                    دلار آمریکا به تومان
                 </label>
+
+                <input 
+                    type="radio"
+                    id="irr-to-usd" 
+                    name="exchange-type" 
+                    value="IRRtoUSD"
+                    checked={exchangeType === "IRRtoUSD"}
+                    onChange={handleExchangeTypeChange}
+                />
                 <label htmlFor="irr-to-usd" className="text-nowrap">
-                    <input 
-                        type="radio"
-                        id="irr-to-usd" 
-                        name="exchange-type" 
-                        value="IRRtoUSD"
-                        checked={exchangeType === "IRRtoUSD"}
-                        onChange={handleExchangeTypeChange}
-                        className="ml-2 text-nowrap"
-                    />
-                    ریال ایران به دلار آمریکا
+                    تومان به دلار آمریکا
                 </label>
             </fieldset>
 
             <fieldset>
-                <label htmlFor="usd-amount font-roboto">
-                    <input 
-                        type="number" 
-                        id="usd-amount" 
-                        name="usd-amount"
-                        placeholder="مقدار"
-                        onChange={handleChange}
-                        value={amount}
-                        className="ml-2 bg-gray-200 px-4 py-2 rounded-xl"
-                    />
+                <input 
+                    type="number" 
+                    id="usd-amount" 
+                    name="usd-amount"
+                    placeholder="مقدار"
+                    onChange={handleChange}
+                    value={amount}
+                    className="ml-2 bg-gray-200 px-4 py-2 rounded-xl hover:shadow-xs hover:shadow-secondary-textColor outline-blue-600 transition-shadow"
+                />
+                <label htmlFor="usd-amount" className="font-roboto">
                     {exchangeType === "USDtoIRR" ? "USD" : "IRT"}&nbsp;
                     <Image 
                         src={exchangeType === "USDtoIRR" ? usaFlag : irFlag}
@@ -114,18 +128,20 @@ export default function ExchangeForm() {
                     />
                 </label>
             </fieldset>
+            
+            <button 
+                type="submit"
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-200 transition-colors font-bold rounded-xl cursor-pointer"
+            >
+                محاسبه
+            </button>
         </form>
 
-        <div
-            className="flex justify-between items-center text-xl min-h-16 px-4 bg-emerald-500 rounded-xl text-lightGray shadow-xs shadow-emerald-500"
-        >
-            <p
-                className="font-bold"
-            >
-                نرخ تبدیل: {exchangeRate}
-            </p>
-            <ArrowDown size={48}/>
-        </div>
+        <ExchangeRateBox 
+            exchangeRate={exchangeRate}
+        />
+
         <OutputBox 
             exchangeType={exchangeType}
             total={convertedAmount}
