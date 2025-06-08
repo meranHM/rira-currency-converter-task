@@ -42,24 +42,26 @@ export default function ExchangeForm() {
     // Handling form submission
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
         if (amount === "") return
+
         setLoading(true)
         const numericAmount = parseFloat(amount)
 
         try {
             const data = await fetchCurrencyData()
             
-            const usdToIrrPrice = data.currency[1].price
-            const IrrToUsdPrice = 1 / usdToIrrPrice
+            const usdToIrrRate = data.currency[1].price
+            const IrrToUsdRate = parseFloat((1 / usdToIrrRate).toFixed(6))
 
-            const totalUsdToIrr = numericAmount * usdToIrrPrice
-            const totalIrrToUSd = numericAmount * IrrToUsdPrice
+            const totalUsdToIrr = numericAmount * usdToIrrRate
+            const totalIrrToUSd = parseFloat((numericAmount * IrrToUsdRate).toFixed(6))
 
             if (exchangeType === "USDtoIRR") {
-                setExchangeRate(usdToIrrPrice)
+                setExchangeRate(usdToIrrRate)
                 setConvertedAmount(totalUsdToIrr)
             } else {
-                setExchangeRate(IrrToUsdPrice)
+                setExchangeRate(IrrToUsdRate)
                 setConvertedAmount(totalIrrToUSd)
             }
 

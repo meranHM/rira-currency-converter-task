@@ -6,8 +6,6 @@ type ExchangeRateBoxProps = {
 
 
 export default function ExchangeRateBox({ exchangeRate }: ExchangeRateBoxProps) {
-    const roundedExchangeRate = exchangeRate?.toFixed(8)
-
     return (
         <div
             className="flex justify-between items-center text-xl min-h-16 px-4 bg-emerald-500 rounded-xl text-lightGray shadow-xs shadow-emerald-500"
@@ -15,7 +13,7 @@ export default function ExchangeRateBox({ exchangeRate }: ExchangeRateBoxProps) 
             <p
                 className="font-bold"
             >
-                نرخ تبدیل: {roundedExchangeRate}
+                نرخ تبدیل: {exchangeRate}
             </p>
             <ArrowDown size={36}/>
         </div>
