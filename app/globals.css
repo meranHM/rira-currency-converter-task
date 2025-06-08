@@ -16,7 +16,7 @@
   }
   
   body {
-    @apply bg-lightGray text-primary-textColor font-vazirmatn
+    @apply bg-secondary-textColor text-primary-textColor font-vazirmatn
   }
 
 }

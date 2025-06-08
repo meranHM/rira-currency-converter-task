@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html dir="rtl" lang="fa-IR">
-      <body className={`${vazirFont.variable} ${robotoFont.variable} antialiased`}>
+      <body className={`${vazirFont.variable} ${robotoFont.variable} antialiased flex flex-col items-center justify-center h-screen`}>
         {children}
       </body>
     </html>
