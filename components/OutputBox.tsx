@@ -8,10 +8,12 @@ type OutputBoxProps = {
   loading: boolean
 }
 
+
 export default function OutputBox({ exchangeType, total, loading }: OutputBoxProps){
   return (
     <div
         className="mt-8 w-full max-w-md border border-gray-200 rounded-xl shadow-md shadow-gray-200 min-h-16 flex justify-center items-center"
+        aria-live="polite"
     >
       {loading ? <p>در حال محاسبه...</p> : (
         <p

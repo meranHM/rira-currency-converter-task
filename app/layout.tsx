@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   description: "A simple currency converter app created by Mehran Shahani for Rira's Front End Intern task.",
 }
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

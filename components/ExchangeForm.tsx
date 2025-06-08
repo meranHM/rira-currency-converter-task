@@ -1,6 +1,5 @@
 "use client"
 
-
 import Image from "next/image"
 import usaFlag from "@/public/icons/usa-flag.svg"
 import irFlag from "@/public/icons/iran-flag.svg"
@@ -8,16 +7,17 @@ import { useState, ChangeEvent, FormEvent } from "react"
 import ExchangeRateBox from "./ExchangeRateBox"
 import OutputBox from "./OutputBox"
 
-type ExchangeType = "USDtoIRR" | "IRRtoUSD"
+type ExchangeType = "USDtoIRT" | "IRTtoUSD"
+
 
 export default function ExchangeForm() {
     const [amount, setAmount] = useState("")
-    const [exchangeType, setExchangeType] = useState<ExchangeType>("USDtoIRR")
+    const [exchangeType, setExchangeType] = useState<ExchangeType>("USDtoIRT")
     const [exchangeRate, setExchangeRate] = useState<number | null>(null)
     const [convertedAmount, setConvertedAmount] = useState<number | null>(null)
     const [loading, setLoading] = useState(false)
 
-    // Handling the type of Exchange change between USDtoIRR or IRRtoUSD
+    // Handling the type of Exchange change between USDtoIRT or IRTtoUSD
     // Resetting fields after switching exchange types
     const handleExchangeTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
         setExchangeType(e.target.value as ExchangeType)
@@ -51,18 +51,18 @@ export default function ExchangeForm() {
         try {
             const data = await fetchCurrencyData()
             
-            const usdToIrrRate = data.currency[1].price
-            const IrrToUsdRate = parseFloat((1 / usdToIrrRate).toFixed(6))
+            const usdToIrtRate = data.currency[1].price
+            const IrtToUsdRate = parseFloat((1 / usdToIrtRate).toFixed(6))
 
-            const totalUsdToIrr = numericAmount * usdToIrrRate
-            const totalIrrToUSd = parseFloat((numericAmount * IrrToUsdRate).toFixed(6))
+            const totalUsdToIrt = numericAmount * usdToIrtRate
+            const totalIrtToUSd = parseFloat((numericAmount * IrtToUsdRate).toFixed(6))
 
-            if (exchangeType === "USDtoIRR") {
-                setExchangeRate(usdToIrrRate)
-                setConvertedAmount(totalUsdToIrr)
+            if (exchangeType === "USDtoIRT") {
+                setExchangeRate(usdToIrtRate)
+                setConvertedAmount(totalUsdToIrt)
             } else {
-                setExchangeRate(IrrToUsdRate)
-                setConvertedAmount(totalIrrToUSd)
+                setExchangeRate(IrtToUsdRate)
+                setConvertedAmount(totalIrtToUSd)
             }
 
         } catch (error) {
@@ -82,48 +82,64 @@ export default function ExchangeForm() {
         >
             <fieldset
                 className="flex gap-3"
+                role="radiogroup"
             >
+                {/* a11y only */}
+                <legend className="sr-only">نوع تبدیل</legend>
                 <input 
                     type="radio" 
-                    id="usd-to-irr" 
+                    id="usd-to-irt" 
                     name="exchange-type" 
-                    value="USDtoIRR"
-                    checked={exchangeType === "USDtoIRR"}
+                    value="USDtoIRT"
+                    checked={exchangeType === "USDtoIRT"}
                     onChange={handleExchangeTypeChange}
                     
                 />
-                <label htmlFor="usd-to-irr" className="text-nowrap ml-2">
+                <label htmlFor="usd-to-irt" className="text-nowrap ml-2">
                     دلار آمریکا به تومان
                 </label>
 
                 <input 
                     type="radio"
-                    id="irr-to-usd" 
+                    id="irt-to-usd" 
                     name="exchange-type" 
-                    value="IRRtoUSD"
-                    checked={exchangeType === "IRRtoUSD"}
+                    value="IRTtoUSD"
+                    checked={exchangeType === "IRTtoUSD"}
                     onChange={handleExchangeTypeChange}
                 />
-                <label htmlFor="irr-to-usd" className="text-nowrap">
+                <label htmlFor="irt-to-usd" className="text-nowrap">
                     تومان به دلار آمریکا
                 </label>
             </fieldset>
 
             <fieldset>
+                {/* a11y only */}
+                <legend className="sr-only">مقدار ورودی</legend>
                 <input 
                     type="number" 
-                    id="usd-amount" 
-                    name="usd-amount"
+                    id="amount" 
+                    name="amount"
                     placeholder="مقدار"
+                    aria-describedby="unit-label"
                     onChange={handleChange}
                     value={amount}
                     className="ml-2 bg-gray-200 px-4 py-2 rounded-xl hover:shadow-xs hover:shadow-secondary-textColor outline-blue-600 transition-shadow"
                 />
-                <label htmlFor="usd-amount" className="font-roboto">
-                    {exchangeType === "USDtoIRR" ? "USD" : "IRT"}&nbsp;
+                {/* a11y only */}
+                <span
+                    id="unit-label"
+                    className="sr-only"
+                >
+                    {exchangeType === "USDtoIRT" ? "مقدار دلار را وارید کنید" : "مقدار تومان را وارد کنید"}
+                </span>
+                <label 
+                    htmlFor="amount"     
+                    className="font-roboto"
+                >
+                    {exchangeType === "USDtoIRT" ? "USD" : "IRT"}&nbsp;
                     <Image 
-                        src={exchangeType === "USDtoIRR" ? usaFlag : irFlag}
-                        alt={exchangeType === "USDtoIRR" ? "USA's flag" : "Iran's flag"}
+                        src={exchangeType === "USDtoIRT" ? usaFlag : irFlag}
+                        alt={exchangeType === "USDtoIRT" ? "USA's flag" : "Iran's flag"}
                         width={32}
                         height={32}
                         className="inline-block"
