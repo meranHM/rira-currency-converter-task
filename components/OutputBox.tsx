@@ -9,6 +9,8 @@ type OutputBoxProps = {
 }
 
 export default function OutputBox({ exchangeType, total, loading }: OutputBoxProps){
+  const roundedTotal = total?.toFixed(8)
+
   return (
     <div
         className="mt-8 w-full max-w-md border border-gray-200 rounded-xl shadow-md shadow-gray-200 min-h-16 flex justify-center items-center"
@@ -17,7 +19,7 @@ export default function OutputBox({ exchangeType, total, loading }: OutputBoxPro
         <p
             className="w-full text-center text-xl font-roboto"
         >
-            {total}&nbsp;
+            {roundedTotal}&nbsp; {exchangeType === "USDtoIRR" ? "IRT" : "USD"}&nbsp;
             <Image 
               src={exchangeType === "USDtoIRR" ? irFlag : usaFlag}
               alt={exchangeType === "USDtoIRR" ? "Iran's flag" : "USA's Flag"}
