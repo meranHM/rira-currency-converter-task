@@ -132,7 +132,7 @@ export default function ExchangeForm() {
             <button 
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-200 transition-colors font-bold rounded-xl cursor-pointer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-200 transition-colors font-bold rounded-xl cursor-pointer disabled:cursor-not-allowed"
             >
                 محاسبه
             </button>
